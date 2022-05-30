@@ -20,8 +20,8 @@ configuration_models = [
         "shuffle_test": True
     },
     {
-        "learning_rate": 1e-5,
-        "batch_size": 4,
+        "learning_rate": 1e-4,
+        "batch_size": 32,
         "picture_size": [256, 256],
         "weight_decay": 0,
         "max_epochs": 15,
@@ -30,7 +30,7 @@ configuration_models = [
 ]
 choice = ("Predict/Detect DR's scale", "Detect the presence of diabetic retinopathy")
 models_paths = ["model/convnext_small(picture_size=512x512).pth",
-                "model/convnext_small(batch_size=4).pth"]
+                "model/convnext_small(Best_params-15-without_wd-256-healthy).pth"]
 current_path = ""
 
 class DiabeticRetinopathyModel(pl.LightningModule):
@@ -176,6 +176,7 @@ if __name__ == "__main__":
             return
 
         txt_edit.insert(tk.END, "Detecting the image using method `" + combo.get() + "`...\n")
+        print(models_paths[choice.index(combo.get())])
         model.load_state_dict(torch.load(models_paths[choice.index(combo.get())]))
         model.eval()
         model.parameters()
@@ -195,7 +196,10 @@ if __name__ == "__main__":
         # print(current_path, prediction.shape, torch.argmax(prediction, dim=1))
         # print(scale, scale.numpy()[0], scale.item(), str(scale.item()))
 
-        txt_edit.insert(tk.END, "Image: " + current_path + "; Scale: " + str(scale.item()) + ".\n")
+        if choice.index(combo.get()) == 0:
+            txt_edit.insert(tk.END, "Image: " + current_path + "; Scale: " + str(scale.item()) + ".\n")
+        else:
+            txt_edit.insert(tk.END, "Image: " + current_path + "; Healthy: " + str(scale.item() == 0) + ".\n")
 
 
     btn_detect = tk.Button(management_model, text="Detect", command=detect, height=3)
