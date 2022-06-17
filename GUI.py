@@ -12,10 +12,10 @@ from torchvision import transforms, models
 
 configuration_models = [
     {
-        "learning_rate": 1e-5,
+        "learning_rate": 1e-4,
         "batch_size": 32,
-        "picture_size": [512, 512],
-        "weight_decay": 0,
+        "picture_size": [256, 256],
+        "weight_decay": 0.01,
         "max_epochs": 15,
         "shuffle_test": True
     },
@@ -23,14 +23,14 @@ configuration_models = [
         "learning_rate": 1e-4,
         "batch_size": 32,
         "picture_size": [256, 256],
-        "weight_decay": 0,
+        "weight_decay": 0.01,
         "max_epochs": 15,
         "shuffle_test": True
     }
 ]
 choice = ("Predict/Detect DR's scale", "Detect the presence of diabetic retinopathy")
-models_paths = ["model/convnext_small(picture_size=512x512).pth",
-                "model/convnext_small(Best_params-15-without_wd-256-healthy).pth"]
+models_paths = ["model/convnext_small(final-simple-pic-best-15).pth",
+                "model/convnext_small(final-simple-pic-best-healthy-15).pth"]
 current_path = ""
 
 class DiabeticRetinopathyModel(pl.LightningModule):
